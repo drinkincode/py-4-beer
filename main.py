@@ -1,28 +1,86 @@
 import flet as ft
 
 def main(page: ft.Page):
-    page.title = "Flet counter example"
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    # Setting up the page
+    page.title = "Beer Listing"
+    page.bgcolor = ft.colors.BLACK
+    page.padding = ft.padding.all(20)
+    
+    # Filters Sidebar
+    filters = ft.Container(
+        content=ft.Column(
+            [
+                ft.Text("Filters", color=ft.colors.WHITE),
+                ft.ElevatedButton("Filter 1", on_click=lambda e: print("Filter 1 clicked")),
+                ft.ElevatedButton("Filter 2", on_click=lambda e: print("Filter 2 clicked")),
+                ft.ElevatedButton("Filter 3", on_click=lambda e: print("Filter 3 clicked")),
+            ],
+            spacing=20,
+        ),
+        bgcolor=ft.colors.GREY,
+        width=150,
+        padding=20,
+    )
 
-    txt_number = ft.TextField(value="0", text_align=ft.TextAlign.RIGHT, width=100)
+    # Beer Listing Grid
+    beer_grid = ft.GridView(
+        expand=True,
+        child_aspect_ratio=1,
+        spacing=10,
+        run_spacing=10,
+        controls=[
+            ft.Container(
+                content=ft.Image(src="beer_image.png", fit=ft.ImageFit.CONTAIN),
+                bgcolor=ft.colors.WHITE,
+                padding=20,
+                border_radius=10,
+            ) for _ in range(6)  # Example grid with 6 items
+        ]
+    )
 
-    def minus_click(e):
-        txt_number.value = str(int(txt_number.value) - 1)
-        page.update()
+    # Beer Detail Section
+    beer_detail = ft.Container(
+        content=ft.Column(
+            [
+                ft.Text("Beer Name", color=ft.colors.WHITE, style="headlineMedium"),
+                ft.Container(
+                    content=ft.Image(src="beer_image.png", fit=ft.ImageFit.CONTAIN),
+                    bgcolor=ft.colors.GREY,
+                    padding=20,
+                    width=200,
+                    height=200,
+                    border_radius=10,
+                ),
+                ft.Text("Beer Info:", color=ft.colors.WHITE, style="bodyMedium"),
+                ft.Text("• Detail 1", color=ft.colors.WHITE),
+                ft.Text("• Detail 2", color=ft.colors.WHITE),
+                ft.Text("• Detail 3", color=ft.colors.WHITE),
+            ],
+            spacing=10,
+        ),
+        bgcolor=ft.colors.GREY,
+        padding=20,
+        width=300,
+    )
 
-    def plus_click(e):
-        txt_number.value = str(int(txt_number.value) + 1)
-        page.update()
-
+    # Page Layout
     page.add(
         ft.Row(
             [
-                ft.IconButton(ft.icons.REMOVE, on_click=minus_click),
-                txt_number,
-                ft.IconButton(ft.icons.ADD, on_click=plus_click),
+                filters,
+                ft.VerticalDivider(color=ft.colors.GREY),
+                ft.Column(
+                    [
+                        ft.Container(content=beer_grid, expand=True),
+                        beer_detail,
+                    ],
+                    expand=True,
+                ),
             ],
-            alignment=ft.MainAxisAlignment.CENTER,
+            expand=True,
         )
     )
 
+# Running the app
 ft.app(main)
+
